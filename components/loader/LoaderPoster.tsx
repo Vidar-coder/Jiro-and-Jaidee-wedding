@@ -1,0 +1,222 @@
+'use client';
+
+import React, { useEffect, useRef } from 'react';
+import { PosterBackdrop } from '@/components/loader/PosterBackdrop';
+import './loader-poster.css';
+
+/*
+ * "Poster" layout for the loading screen (loadingScreen.loaderDisplay = "poster"):
+ * soft photo background under a pastel wash, floral corners and a thin gold frame,
+ * "Save — the — Date" across the top, the couple cut-out in the middle, short side lines
+ * left and right, then names, date, time and venue, with the status line and a progress bar
+ * (with percentage) at the bottom. Entrances are CSS-delay driven so they play in sync with
+ * the opening card's doors parting in front of it.
+ */
+
+export interface LoaderPosterProps {
+  photos: string[];
+  desktopPhotos: string[];
+  coupleImage: string;
+  kicker: string;
+  /** e.g. "Save the Date" — the joining word ("the") is set small between two rules */
+  headline: string;
+  sideLeft: string[];
+  sideRight: string[];
+  weddingOf: string;
+  groomName: string;
+  brideName: string;
+  /** Fonts from LoadingScreen (next/font class names) */
+  nameFontClass: string;
+  andFontClass: string;
+  dateText: string;
+  weekday: string;
+  time: string;
+  venueName: string;
+  venueAddress: string;
+  corners: { topLeft?: string; topRight?: string; bottomLeft?: string; bottomRight?: string };
+  /** Word between the names (loadingScreen.namesJoiner) */
+  namesJoiner: string;
+  photoVeil?: number;
+  showProgress: boolean;
+  showPercent: boolean;
+  statusMessage?: string;
+  statusKey: number;
+  durationMs: number;
+  reduceMotion: boolean;
+}
+
+const JOINING_WORDS = new Set(['the', 'of', 'and', '&', 'a']);
+
+// "Save the Date" → ["Save", "the", "Date"]; anything without a joining word stays whole
+function splitHeadline(headline: string) {
+  const words = headline.split(/\s+/).filter(Boolean);
+  const i = words.findIndex((w, idx) => idx > 0 && idx < words.length - 1 && JOINING_WORDS.has(w.toLowerCase()));
+  if (i < 0) return { before: headline, join: '', after: '' };
+  return { before: words.slice(0, i).join(' '), join: words[i], after: words.slice(i + 1).join(' ') };
+}
+
+const delay = (ms: number) => ({ '--lp-delay': `${ms}ms` }) as React.CSSProperties;
+
+export const LoaderPoster: React.FC<LoaderPosterProps> = (p) => {
+  const head = splitHeadline(p.headline);
+  const percentRef = useRef<HTMLSpanElement>(null);
+
+  // Percentage under the bar, counted up in step with the bar's CSS animation
+  useEffect(() => {
+    const el = percentRef.current;
+    if (!el) return;
+    const start = performance.now();
+    let raf = 0;
+    let last = -1;
+    const tick = (now: number) => {
+      const pct = Math.min(100, Math.floor(((now - start) / p.durationMs) * 100));
+      if (pct !== last) {
+        el.textContent = `${pct}%`;
+        last = pct;
+      }
+      if (pct < 100) raf = requestAnimationFrame(tick);
+    };
+    raf = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(raf);
+  }, [p.durationMs]);
+
+  return (
+    <div className={`lp${p.reduceMotion ? ' lp--still' : ''}`}>
+      {/* Photos, pastel wash, gold frame and floral corners — shared with the envelope (Hero.tsx) */}
+      <PosterBackdrop photos={p.photos} desktopPhotos={p.desktopPhotos} corners={p.corners} veil={p.photoVeil} />
+
+      <div className="lp__stage">
+        <div className="lp__glow" aria-hidden="true" />
+
+        {/* Couple cut-out, fading into the details below */}
+        {p.coupleImage && (
+          // eslint-disable-next-line @next/next/no-img-element
+          <img
+            src={p.coupleImage}
+            alt=""
+            aria-hidden="true"
+            className="lp__couple lp-in lp-in--rise"
+            style={delay(800)}
+            fetchPriority="high"
+            draggable={false}
+          />
+        )}
+
+        <div className="lp__content">
+          <header className="lp__header">
+            {p.kicker && (
+              <p className="lp__kicker lp-in" style={delay(500)}>
+                {p.kicker}
+              </p>
+            )}
+            <h1 className="lp__headline" aria-label={p.headline}>
+              <span className="lp__script lp-gold lp-in lp-in--left" style={delay(700)} aria-hidden="true">
+                {head.before}
+              </span>
+              {head.join && (
+                <span className="lp__join lp-in" style={delay(1050)} aria-hidden="true">
+                  <span className="lp__rule" />
+                  {head.join}
+                  <span className="lp__rule" />
+                </span>
+              )}
+              {head.after && (
+                <span className="lp__script lp-gold lp-in lp-in--right" style={delay(850)} aria-hidden="true">
+                  {head.after}
+                </span>
+              )}
+            </h1>
+          </header>
+
+          <div className="lp__middle">
+            {p.sideLeft.length > 0 && (
+              <p className="lp__side lp__side--left lp-in lp-in--left" style={delay(1600)}>
+                {p.sideLeft.map((line, i) => (
+                  <span key={i}>{line}</span>
+                ))}
+              </p>
+            )}
+            {p.sideRight.length > 0 && (
+              <p className="lp__side lp__side--right lp-in lp-in--right" style={delay(1750)}>
+                {p.sideRight.map((line, i) => (
+                  <span key={i}>{line}</span>
+                ))}
+              </p>
+            )}
+          </div>
+
+          <div className="lp__details">
+            {p.weddingOf && (
+              <p className="lp__wedding-of lp-in" style={delay(1950)}>
+                {p.weddingOf}
+              </p>
+            )}
+            <h2 className="lp__names" aria-label={`${p.groomName} ${p.namesJoiner} ${p.brideName}`}>
+              <span className={`${p.nameFontClass} lp__name lp-gold lp-in`} style={delay(2150)} aria-hidden="true">
+                {p.groomName}
+              </span>
+              <span className={`${p.andFontClass} lp__and lp-gold lp-in`} style={delay(2350)} aria-hidden="true">
+                {p.namesJoiner}
+              </span>
+              <span className={`${p.nameFontClass} lp__name lp-gold lp-in`} style={delay(2500)} aria-hidden="true">
+                {p.brideName}
+              </span>
+            </h2>
+            {p.dateText && (
+              <p className="lp__date lp-in" style={delay(2750)}>
+                <span className="lp__rule lp__rule--long" />
+                <span className={`${p.nameFontClass} lp-gold`}>{p.dateText}</span>
+                <span className="lp__rule lp__rule--long" />
+              </p>
+            )}
+            {(p.weekday || p.time) && (
+              <p className="lp__when lp-in" style={delay(2950)}>
+                {p.weekday}
+                {p.weekday && p.time && <span className="lp__dot" aria-hidden="true" />}
+                {p.time}
+              </p>
+            )}
+            {p.venueName && (
+              <p className="lp__venue lp-in" style={delay(3100)}>
+                {p.venueName}
+              </p>
+            )}
+            {p.venueAddress && (
+              <p className="lp__address lp-in" style={delay(3200)}>
+                {p.venueAddress}
+              </p>
+            )}
+          </div>
+
+          <footer className="lp__footer lp-in" style={delay(3350)}>
+            {p.statusMessage && (
+              <p key={p.statusKey} className="lp__status">
+                {p.statusMessage}
+              </p>
+            )}
+            {p.showProgress && (
+              <>
+              <div
+                className="lp__track"
+                role="progressbar"
+                aria-label="Loading invitation"
+                aria-valuemin={0}
+                aria-valuemax={100}
+              >
+                <div className="lp__bar" style={{ animationDuration: `${p.durationMs}ms` }}>
+                  <span className="lp__knob" />
+                </div>
+              </div>
+              {p.showPercent && (
+                <span ref={percentRef} className="lp__percent" aria-hidden="true">
+                  0%
+                </span>
+              )}
+              </>
+            )}
+          </footer>
+        </div>
+      </div>
+    </div>
+  );
+};

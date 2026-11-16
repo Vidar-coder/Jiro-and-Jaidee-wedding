@@ -7,6 +7,7 @@ import { Hero as MainHero } from "@/components/sections/hero"
 import { Welcome } from "@/components/sections/welcome"
 import { Hero as InvitationHero } from "@/components/loader/Hero"
 import { LoadingScreen } from "@/components/loader/LoadingScreen"
+import { OpeningCard, OPENING_CARD_MOBILE_MEDIA } from "@/components/loader/OpeningCard"
 import { Navbar } from "@/components/navbar"
 import { AppState } from "@/components/types"
 import { prefetchInvitationData } from "@/lib/invitation-data"
@@ -116,6 +117,15 @@ export function InvitationPage({ sponsorsList, showEntourage = true }: Invitatio
   const [loadingOverlayVisible, setLoadingOverlayVisible] = useState(
     () => appState === AppState.LOADING,
   )
+  // Ribbon-tied opening card shown before the loader; the loader only starts once it's tapped open.
+  // Turn it off with `openingCard.enabled` in content/site.ts to start straight on the loader.
+  const openingCardEnabled = siteConfig.openingCard?.enabled ?? true
+  const [openingCardVisible, setOpeningCardVisible] = useState(
+    () => appState === AppState.LOADING && openingCardEnabled,
+  )
+  const [loaderStarted, setLoaderStarted] = useState(
+    () => appState !== AppState.LOADING || !openingCardEnabled,
+  )
   const [heroEnterFromLoading, setHeroEnterFromLoading] = useState(false)
   const [enteringFromInvite, setEnteringFromInvite] = useState(false)
 
@@ -131,6 +141,20 @@ export function InvitationPage({ sponsorsList, showEntourage = true }: Invitatio
     }, 100)
     return () => clearTimeout(id)
   }, [appState])
+
+  // Opening card on phones only (openingCard.mobileOnly): larger screens skip it and start
+  // straight on the loading screen. Until this runs, CSS covers the card on those screens.
+  const openingCardMobileOnly = siteConfig.openingCard?.mobileOnly ?? true
+  useEffect(() => {
+    if (!openingCardVisible || !openingCardMobileOnly) return
+    if (window.matchMedia(OPENING_CARD_MOBILE_MEDIA).matches) return
+    setOpeningCardVisible(false)
+    setLoaderStarted(true)
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- decided once, on first load
+  }, [])
+
+  const handleOpeningCardOpenStart = useCallback(() => setLoaderStarted(true), [])
+  const handleOpeningCardOpened = useCallback(() => setOpeningCardVisible(false), [])
 
   const handleLoadingFadeStart = useCallback(() => {
     setShowInvitation(true)
@@ -164,7 +188,14 @@ export function InvitationPage({ sponsorsList, showEntourage = true }: Invitatio
 
   return (
       <div className={`relative min-h-screen bg-cloud text-charcoal selection:bg-birch selection:text-nut font-sans ${pageScrollLocked ? "overflow-hidden" : ""}`}>
-        {loadingOverlayVisible && (
+        {openingCardVisible && (
+          <OpeningCard
+            onOpenStart={handleOpeningCardOpenStart}
+            onOpened={handleOpeningCardOpened}
+          />
+        )}
+
+        {loadingOverlayVisible && loaderStarted && (
           <LoadingScreen
             onFadeStart={handleLoadingFadeStart}
             onComplete={handleLoadingComplete}
@@ -180,6 +211,9 @@ export function InvitationPage({ sponsorsList, showEntourage = true }: Invitatio
           />
         )}
 
+        {/* The sections below are lazy chunks; their own boundary lets the opening card / loader
+            hydrate (and respond to taps) without waiting for every chunk to arrive */}
+        <Suspense fallback={null}>
         <main className="relative w-full h-full">
 
           <motion.div
@@ -290,6 +324,7 @@ export function InvitationPage({ sponsorsList, showEntourage = true }: Invitatio
             </div>
           </motion.div>
         </main>
+        </Suspense>
 
       </div>
   )

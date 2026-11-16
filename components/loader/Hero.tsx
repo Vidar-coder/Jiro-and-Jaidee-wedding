@@ -22,6 +22,7 @@ import { InviteParticles } from '@/components/loader/InviteParticles';
 import { InvitePhotoBackdrop, PhotoBackground } from '@/components/loader/invite-photo-backdrop';
 import { TintedDeco } from '@/components/tinted-deco';
 import { SectionBackdrop } from '@/components/section-backdrop';
+import { PosterBackdrop, posterThemeVars } from '@/components/loader/PosterBackdrop';
 import './envelope-invite.css';
 
 const theSeasons = localFont({
@@ -122,6 +123,16 @@ export const Hero: React.FC<HeroProps> = ({
   const siteConfig = useSiteConfig();
   const content = siteConfig.loadingScreen ?? defaultSiteConfig.loadingScreen;
   const isPlain = content.display === 'plain';
+  // Poster loader: the envelope keeps the loader's backdrop (photos, pastel wash, gold frame,
+  // corners) so the look carries straight across the hand-off
+  const posterBackdrop = content.loaderDisplay === 'poster';
+  const poster = { ...defaultSiteConfig.loadingScreen.poster, ...content.poster };
+  const posterTheme = { ...defaultSiteConfig.loadingScreen.poster.theme, ...content.poster?.theme };
+  const namesJoiner = content.namesJoiner ?? defaultSiteConfig.loadingScreen.namesJoiner;
+  // Paper of the envelope on the poster backdrop (loadingScreen.poster.envelopeTexture)
+  const envelopeTexture = posterBackdrop
+    ? (content.poster?.envelopeTexture ?? defaultSiteConfig.loadingScreen.poster.envelopeTexture)
+    : '';
   const plainTheme = content.plainTheme ?? defaultSiteConfig.loadingScreen.plainTheme;
   const cornerDecos = content.cornerDecos ?? defaultSiteConfig.loadingScreen.cornerDecos;
   const plainInvite = content.plainInvite ?? defaultSiteConfig.loadingScreen.plainInvite;
@@ -176,7 +187,7 @@ export const Hero: React.FC<HeroProps> = ({
     () => (content.backgroundPhotosDesktop ?? []).map((src) => encodeURI(src)),
     [content.backgroundPhotosDesktop],
   );
-  const showPhotoBackdrop = !isPlain && backgroundPhotos.length > 0;
+  const showPhotoBackdrop = !isPlain && !posterBackdrop && backgroundPhotos.length > 0;
 
   // One portrait of the groom (left) and one of the bride (right), revealed as the envelope opens
   const portraitPair = useMemo(() => {
@@ -594,7 +605,7 @@ export const Hero: React.FC<HeroProps> = ({
 
   return (
     <motion.div
-      className={`env-invite-screen${isPlain ? ' env-invite-screen--plain' : ''}${isPlain && enterFromLoading && visible && !reduceMotion ? ' is-arriving' : ''} ${visible ? '' : 'is-hidden'}`}
+      className={`env-invite-screen${isPlain ? ' env-invite-screen--plain' : ''}${posterBackdrop ? ' env-invite-screen--poster' : ''}${envelopeTexture ? ' env-invite-screen--textured' : ''}${isPlain && enterFromLoading && visible && !reduceMotion ? ' is-arriving' : ''} ${visible ? '' : 'is-hidden'}`}
       // Photo reveal keeps the open-envelope look the whole time (letter stays under the pocket lip)
       data-phase={isExiting && !usePhotoExit ? 'exiting' : phase}
       aria-hidden={!visible}
@@ -614,9 +625,13 @@ export const Hero: React.FC<HeroProps> = ({
           ? usePhotoExit
             ? { duration: PHOTO_FADE_MS / 1000, ease: [0.4, 0, 0.2, 1] }
             : inviteExitEase
-          : visible && enterFromLoading && !reduceMotion
-            ? inviteEnterEase
-            : { duration: reduceMotion ? 0.2 : 0.01 }
+          : posterBackdrop && visible
+            ? // Same backdrop as the poster loader underneath: show it at once (a fade would let the
+              // page show through mid-way); the envelope itself drops in (CSS .is-arriving)
+              { duration: 0 }
+            : visible && enterFromLoading && !reduceMotion
+              ? inviteEnterEase
+              : { duration: reduceMotion ? 0.2 : 0.01 }
       }
       style={{
         pointerEvents: !visible || isExiting ? 'none' : undefined,
@@ -625,6 +640,8 @@ export const Hero: React.FC<HeroProps> = ({
           '--env-plain-ink': plainTheme.text,
           '--env-plain-accent': plainTheme.accent,
         }),
+        ...(envelopeTexture && { '--env-card-texture': `url("${encodeURI(envelopeTexture)}")` }),
+        ...(posterBackdrop && posterThemeVars(posterTheme)),
       } as React.CSSProperties}
     >
       {showPhotoBackdrop && (
@@ -633,7 +650,16 @@ export const Hero: React.FC<HeroProps> = ({
         </div>
       )}
 
-      {isPlain && (
+      {posterBackdrop && (
+        <PosterBackdrop
+          photos={backgroundPhotos}
+          desktopPhotos={backgroundPhotosDesktop}
+          corners={cornerDecos}
+          veil={poster.photoVeil}
+        />
+      )}
+
+      {isPlain && !posterBackdrop && (
         <>
           <PhotoBackground photos={backgroundPhotos} desktopPhotos={backgroundPhotosDesktop} />
           <div className="env-invite-plain-corners" aria-hidden="true">
@@ -662,7 +688,7 @@ export const Hero: React.FC<HeroProps> = ({
         </>
       )}
 
-      {!isPlain && <div className="env-invite-readability-scrim" aria-hidden="true" />}
+      {!isPlain && !posterBackdrop && <div className="env-invite-readability-scrim" aria-hidden="true" />}
 
       {!reduceMotion && (
         <div className="env-invite-particles pointer-events-none" aria-hidden="true">
@@ -910,7 +936,7 @@ export const Hero: React.FC<HeroProps> = ({
                           {groomName}
                         </span>
                         <span className={`${aboveTheBeyond.className} env-invite-names__and`} aria-hidden="true">
-                          and
+                          {namesJoiner}
                         </span>
                         <span className={`${theSeasons.className} env-invite-names__nick`} aria-hidden="true">
                           {brideName}
@@ -1075,6 +1101,13 @@ export const Hero: React.FC<HeroProps> = ({
               <div className="env-invite-pocket-right" />
               {isPlain && <EnvelopePocketFolds geo={foldGeo} />}
             </div>
+
+            {/* Poster backdrop: one sheen of light across the envelope as it settles */}
+            {posterBackdrop && (
+              <span className="env-invite-arrive-shine" aria-hidden="true">
+                <span />
+              </span>
+            )}
 
             {/* Wax seal — centered on flap junction */}
             <div className={`env-invite-seal-wrap${sealGone ? ' is-opened' : ''}`}>

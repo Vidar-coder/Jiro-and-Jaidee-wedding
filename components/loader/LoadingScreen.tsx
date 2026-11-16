@@ -9,6 +9,8 @@ import { siteConfig as defaultSiteConfig } from '@/content/site';
 import { PhotoBackground } from '@/components/loader/invite-photo-backdrop';
 import { TintedDeco } from '@/components/tinted-deco';
 import { SectionBackdrop } from '@/components/section-backdrop';
+import { LoaderPoster } from '@/components/loader/LoaderPoster';
+import { posterThemeVars } from '@/components/loader/PosterBackdrop';
 import './loading-screen.css';
 
 const theSeasons = localFont({
@@ -34,10 +36,10 @@ const DATE_CARD_TILT = ['-3deg', '0deg', '3deg'];
 const FADE_OUT_MS = 1400;
 // Plain mode handoff: the card tucks away first, then the envelope hero starts arriving
 const PLAIN_HANDOFF_LEAD_MS = 550;
+// Poster handoff: the text + couple fade off the (unchanging) background first, then the
+// envelope screen takes over on top with the identical background — no see-through moment
+const POSTER_HANDOFF_LEAD_MS = 750;
 const MS_PER_DAY = 1000 * 60 * 60 * 24;
-// Lighter wash than the shared default so the couple's photos actually read behind the card
-// (the vignette in loading-screen.css keeps the centre soft for the text)
-const LOADER_PHOTO_VEIL = 0.3;
 
 // Plain mode choreography — all CSS-delay driven so it plays in sync even before hydration:
 // ornament → headline letters → countdown → names → date (day, month/year, weekday) → details
@@ -104,7 +106,10 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
   const content = siteConfig.loadingScreen ?? defaultSiteConfig.loadingScreen;
   const totalDurationMs = content.durationMs;
   const statusMessages = content.statusMessages;
-  const isPlain = (content.loaderDisplay ?? content.display) === 'plain';
+  const loaderDisplay = content.loaderDisplay ?? content.display;
+  const isPlain = loaderDisplay === 'plain';
+  const isPoster = loaderDisplay === 'poster';
+  const poster = { ...defaultSiteConfig.loadingScreen.poster, ...content.poster };
   const backgroundPhotos = useMemo(
     () => (content.backgroundPhotos ?? []).map((src) => encodeURI(src)),
     [content.backgroundPhotos],
@@ -113,10 +118,14 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
     () => (content.backgroundPhotosDesktop ?? []).map((src) => encodeURI(src)),
     [content.backgroundPhotosDesktop],
   );
-  const showBackdrop = !isPlain && backgroundPhotos.length > 0;
+  const showBackdrop = !isPlain && !isPoster && backgroundPhotos.length > 0;
   const plainTheme = content.plainTheme ?? defaultSiteConfig.loadingScreen.plainTheme;
   const cornerDecos = content.cornerDecos ?? defaultSiteConfig.loadingScreen.cornerDecos;
   const plainInvite = content.plainInvite ?? defaultSiteConfig.loadingScreen.plainInvite;
+  // Word between the couple's names ("and", "&", …) and the plain loader's photo wash
+  const namesJoiner = content.namesJoiner ?? defaultSiteConfig.loadingScreen.namesJoiner;
+  const plainPhotoVeil = content.plainPhotoVeil ?? defaultSiteConfig.loadingScreen.plainPhotoVeil;
+  const posterTheme = { ...defaultSiteConfig.loadingScreen.poster.theme, ...content.poster?.theme };
 
   const reduceMotion = useReducedMotion();
   const [fadeOut, setFadeOut] = useState(false);
@@ -178,6 +187,14 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
 
   const ceremonyLine = siteConfig.ceremony.time ?? '';
   const coupleNames = `${siteConfig.couple.groomNickname} & ${siteConfig.couple.brideNickname}`;
+  const venueName = (siteConfig.ceremony.location ?? '').trim();
+  const venueAddress = (() => {
+    const address = (siteConfig.ceremony.venue ?? '').trim();
+    if (venueName && address.toLowerCase().startsWith(venueName.toLowerCase())) {
+      return address.slice(venueName.length).replace(/^[\s,–-]+/, '');
+    }
+    return address;
+  })();
 
 
   useEffect(() => {
@@ -207,7 +224,13 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
   useEffect(() => {
     let fadeTimer: ReturnType<typeof setTimeout> | undefined;
     let handoffTimer: ReturnType<typeof setTimeout> | undefined;
-    const lead = isPlain && !reduceMotion ? PLAIN_HANDOFF_LEAD_MS : 0;
+    const lead = reduceMotion
+      ? 0
+      : isPlain
+        ? PLAIN_HANDOFF_LEAD_MS
+        : isPoster
+          ? POSTER_HANDOFF_LEAD_MS
+          : 0;
     const t = setTimeout(() => {
       setFadeOut(true);
       handoffTimer = setTimeout(() => {
@@ -220,11 +243,11 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
       clearTimeout(handoffTimer);
       clearTimeout(fadeTimer);
     };
-  }, [isPlain, onComplete, onFadeStart, reduceMotion, totalDurationMs]);
+  }, [isPlain, isPoster, onComplete, onFadeStart, reduceMotion, totalDurationMs]);
 
   return (
     <div
-      className={`loading-screen loading-screen--invitation${isPlain ? ' loading-screen--plain' : ''} fixed inset-0 z-50 flex flex-col overflow-hidden overscroll-none h-dvh max-h-dvh w-screen${fadeOut ? ' is-fading' : ''}${reduceMotion ? ' is-reduced-motion' : ''}`}
+      className={`loading-screen loading-screen--invitation${isPlain ? ' loading-screen--plain' : ''}${isPoster ? ' loading-screen--poster' : ''} fixed inset-0 z-50 flex flex-col overflow-hidden overscroll-none h-dvh max-h-dvh w-screen${fadeOut ? ' is-fading' : ''}${reduceMotion ? ' is-reduced-motion' : ''}`}
       aria-live="polite"
       aria-busy={!fadeOut}
       aria-label="Loading invitation"
@@ -236,9 +259,45 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
             '--ls-plain-ink': plainTheme.text,
             '--ls-plain-accent': plainTheme.accent,
           }),
+          ...(isPoster && posterThemeVars(posterTheme)),
         } as React.CSSProperties
       }
     >
+      {isPoster ? (
+        <LoaderPoster
+          photos={backgroundPhotos}
+          desktopPhotos={backgroundPhotosDesktop}
+          coupleImage={poster.coupleImage ? encodeURI(poster.coupleImage) : ''}
+          kicker={poster.kicker}
+          headline={content.headline}
+          sideLeft={poster.sideLeft ?? []}
+          sideRight={poster.sideRight ?? []}
+          weddingOf={poster.weddingOf}
+          groomName={siteConfig.couple.groomNickname}
+          brideName={siteConfig.couple.brideNickname}
+          nameFontClass={theSeasons.className}
+          andFontClass={aboveTheBeyond.className}
+          dateText={
+            hasValidDate
+              ? weddingDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })
+              : ''
+          }
+          weekday={silkDate?.weekday ?? ''}
+          time={ceremonyLine}
+          venueName={poster.showVenue ? venueName : ''}
+          venueAddress={poster.showVenue ? venueAddress : ''}
+          corners={cornerDecos}
+          namesJoiner={namesJoiner}
+          photoVeil={poster.photoVeil}
+          showProgress={poster.showProgress ?? true}
+          showPercent={poster.showPercent ?? true}
+          statusMessage={statusMessages[statusIndex]}
+          statusKey={statusIndex}
+          durationMs={totalDurationMs}
+          reduceMotion={!!reduceMotion}
+        />
+      ) : (
+      <>
       {showBackdrop && (
         <>
           {/* Same photo strip + soft peach/ivory veil as the envelope (Hero.tsx), so the
@@ -253,7 +312,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
           <PhotoBackground
             photos={backgroundPhotos}
             desktopPhotos={backgroundPhotosDesktop}
-            veil={LOADER_PHOTO_VEIL}
+            veil={plainPhotoVeil}
           />
           <div className="loading-screen__plain-photo-vignette" aria-hidden="true" />
           <div className="ls-plain-glow" aria-hidden="true" />
@@ -376,7 +435,7 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
               {siteConfig.couple.groomNickname}
             </span>
             <span className={`${aboveTheBeyond.className} ls-names__and`} aria-hidden="true">
-              and
+              {namesJoiner}
             </span>
             <span className={`${theSeasons.className} ls-names__nick`} aria-hidden="true">
               {siteConfig.couple.brideNickname}
@@ -501,6 +560,8 @@ export const LoadingScreen: React.FC<LoadingScreenProps> = ({ onComplete, onFade
           </div>
         </footer>
       </div>
+      </>
+      )}
     </div>
   );
 };

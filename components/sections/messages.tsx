@@ -42,21 +42,25 @@ const palette = {
 } as const
 
 const lightLineStyle = {
-  background: "linear-gradient(to right, transparent, rgb(255 255 255 / 75%), transparent)",
+  background: "linear-gradient(to right, transparent, rgb(255 255 255 / 85%), transparent)",
+  boxShadow: "0 1px 3px rgb(36 22 18 / 35%)",
 } as const
 
-// Header sits on the dusty-blue Silk backdrop — white text with a navy halo.
-// Stronger navy halo now that the silk is bright peach, so the white text stays readable
+// Text outside the cards sits straight on the dark brown / peach silk: white lettering with a
+// deep-brown halo so it reads on both the light and the dark folds
+const OUTSIDE_TEXT = "#FFFFFF"
+const HALO = "36 22 18" // deep warm brown (rgb), matches the silk's shadows
 const silkTitleShadow =
-  "0 1px 1px color-mix(in srgb, var(--color-motif-soft) 60%, transparent), 0 2px 10px color-mix(in srgb, var(--color-motif-soft) 55%, transparent), 0 8px 28px color-mix(in srgb, var(--color-motif-soft) 40%, transparent)"
+  `0 1px 1px rgb(${HALO} / 55%), 0 2px 8px rgb(${HALO} / 55%), 0 6px 24px rgb(${HALO} / 45%)`
 const silkScriptShadow =
-  "0 1px 1px color-mix(in srgb, var(--color-motif-soft) 60%, transparent), 0 2px 12px color-mix(in srgb, var(--color-motif-soft) 50%, transparent)"
+  `0 1px 1px rgb(${HALO} / 55%), 0 2px 10px rgb(${HALO} / 50%), 0 6px 22px rgb(${HALO} / 35%)`
 const silkBodyShadow =
-  "0 1px 2px color-mix(in srgb, var(--color-motif-soft) 70%, transparent), 0 2px 12px color-mix(in srgb, var(--color-motif-soft) 50%, transparent)"
+  `0 1px 2px rgb(${HALO} / 70%), 0 2px 10px rgb(${HALO} / 55%)`
 
+// Soft warm shade behind each outside text block, so the white never sits on a pale fold
 const silkGlowStyle = {
   background:
-    "radial-gradient(ellipse at center, color-mix(in srgb, var(--color-motif-soft) 34%, transparent) 0%, color-mix(in srgb, var(--color-motif-soft) 14%, transparent) 46%, transparent 72%)",
+    `radial-gradient(ellipse at center, rgb(${HALO} / 38%) 0%, rgb(${HALO} / 18%) 48%, transparent 74%)`,
 } as const
 
 // Primary button: deep navy with a soft peach ring
@@ -107,7 +111,7 @@ function OutsideDivider() {
   return (
     <div
       className="flex items-center justify-center gap-2"
-      style={{ filter: "drop-shadow(0 1px 3px color-mix(in srgb, var(--color-welcome-navy) 45%, transparent))" }}
+      style={{ filter: `drop-shadow(0 1px 3px rgb(${HALO} / 55%))` }}
       aria-hidden
     >
       <span className="h-px w-12 sm:w-20" style={{ background: "linear-gradient(to right, transparent, rgb(255 255 255 / 90%))" }} />
@@ -150,7 +154,7 @@ function MessagesTitle() {
         className={`${theSeasons.className} block uppercase leading-[0.9] tracking-[0.04em] min-[400px]:tracking-[0.08em] sm:tracking-[0.12em] md:tracking-[0.14em]`}
         style={{
           fontSize: "var(--title-size)",
-          color: "#44413C",
+          color: OUTSIDE_TEXT,
           textShadow: silkTitleShadow,
         }}
       >
@@ -161,7 +165,7 @@ function MessagesTitle() {
         className={`${aboveTheBeyond.className} relative z-10 mx-auto mt-1.5 block w-fit max-w-full px-1 leading-[0.88] sm:mt-2 sm:leading-[0.9]`}
         style={{
           fontSize: "var(--script-size)",
-          color: "#44413C",
+          color: OUTSIDE_TEXT,
           textShadow: silkScriptShadow,
         }}
       >
@@ -464,7 +468,7 @@ export function Messages() {
           </div>
           <p
             className={`font-goudy-italic mx-auto mt-4 max-w-2xl px-2 sm:mt-5 md:mt-6 ${sectionType.textRelaxed}`}
-            style={{ color: "#44413C", textShadow: silkBodyShadow }}
+            style={{ color: OUTSIDE_TEXT, textShadow: silkBodyShadow }}
           >
             Share a short note, wish, or prayer for {coupleDisplayName}. Every message becomes part of our story.
           </p>
@@ -485,13 +489,13 @@ export function Messages() {
           <SilkTextGlow className="mb-4 text-center sm:mb-6 md:mb-8">
             <h3
               className={`${theSeasons.className} mb-1.5 font-semibold tracking-[0.08em] uppercase sm:mb-2 ${sectionType.subheader}`}
-              style={{ color: "#44413C", textShadow: silkTitleShadow }}
+              style={{ color: OUTSIDE_TEXT, textShadow: silkTitleShadow }}
             >
               Messages from Loved Ones
             </h3>
             <p
               className={`font-goudy-italic ${sectionType.text}`}
-              style={{ color: "#44413C", textShadow: silkBodyShadow }}
+              style={{ color: OUTSIDE_TEXT, textShadow: silkBodyShadow }}
             >
               Warm words from family and friends
             </p>

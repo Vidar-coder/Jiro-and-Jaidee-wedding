@@ -353,9 +353,9 @@ const SITE_URL = "https://geronimo-and-jaidee-ashley.vercel.app/"
 // Keep it a 1200×630 JPG under ~300 KB — Messenger/WhatsApp silently drop larger images,
 // which is why forwarded links can lose their preview. Exported from /Details/imagepreview.png.
 // Use a NEW filename whenever the image changes — Facebook caches images by URL.
-const LINK_PREVIEW_IMAGE = "/Details/image-prev.png"
+const LINK_PREVIEW_IMAGE = "/monogram/linkPreview.pngg"
 // Square fallback (600×600) for apps that show a small square thumbnail
-const LINK_PREVIEW_IMAGE_SQUARE = "/Details/image-prev.png"
+const LINK_PREVIEW_IMAGE_SQUARE = "/monogram/linkPreview.png"
 
 // Site address with env override applied and no trailing slash — no need to edit
 export const canonicalSiteUrl = (process.env.NEXT_PUBLIC_SITE_URL ?? SITE_URL).replace(/\/$/, "")
@@ -367,9 +367,9 @@ const DISPLAY_MODE = "plain" as "photos" | "plain"
 
 // ── Shared images ───────────────────────────────────────────────────────────
 const BRAND = {
-  monogram: "/monogram/monogram.png", // monogram (loader, envelope, closing)
+  monogram: "/monogram/Elegant Black Calligraphic J Monogram.png", // monogram (loader, envelope, closing)
   coupleNameImage: "/Details/newcoupelNames.png", // couple-name lettering (loader, envelope)
-  seal: "/monogram/seal.png", // envelope wax seal
+  seal: "/monogram/newSeal.png", // envelope wax seal
   backgroundMusic: "/background_music/Palagi - Tj Monterde Violin Cover by BOJO.mp3",
 }
 
@@ -405,14 +405,14 @@ const MARQUEE_PHOTOS_DESKTOP = Array.from(
 // Change a path here to swap it on every section at once.
 // To change ONE section only, override it there, e.g. decos: { ...SECTION_DECOS, footerVine: "" }
 const DECOR = {
-  cornerTopLeft: "/deco/ivory-peach-v1/top-left-corner.png",
-  cornerTopRight: "/deco/ivory-peach-v1/top-right-corner.png",
-  cornerBottomLeft: "/deco/ivory-peach-v1/bottom-left-corner.png",
-  cornerBottomRight: "/deco/ivory-peach-v1/bottom-right-corner.png",
+  cornerTopLeft: "/deco/new-deco/top-left.png",
+  cornerTopRight: "/deco/new-deco/top-right.png",
+  cornerBottomLeft: "/deco/new-deco/bottom-left.png",
+  cornerBottomRight: "/deco/new-deco/bottom-right.png",
   cornerOverlayTopLeft: "/deco/ivory-peach-v1/top-left-corner.png", // floral corner layered over the top vines (loader + envelope)
   cornerOverlayTopRight: "/deco/ivory-peach-v1/top-right-corner.png",
-  headerOrnament:  "/deco/ivory-peach-v1/floral-divider.png", // small sprig above titles
-  footerVine: "/deco/ivory-peach-v1/floral-divider.png", // long vine at section ends
+  headerOrnament:  "/deco/new-deco/header.png", // small sprig above titles
+  footerVine: "/deco/new-deco/header.png", // long vine at section ends
   sideLeft: "/deco/ivory-peach-v1/side-left.png", // love story side sprigs
   sideRight: "/deco/ivory-peach-v1/side-right.png",
 }
@@ -486,14 +486,80 @@ export const siteConfig = {
     theme: "Gray & Blush Pink",
     motif: "#9A9294, #A8606F, #EBCBCF, #F3E8E6",
   },
+  // Tap-to-open card shown before the loading screen (components/loader/OpeningCard.tsx):
+  // a gate-fold card tied with a satin bow. On tap the bow unties, light runs through the gold,
+  // glows out of the centre seam and the two doors swing open onto the loading screen.
+  // To reuse it, drop new artwork in /public and point these paths at it.
+  openingCard: {
+    enabled: true, // false = skip the card and start straight on the loading screen
+    // true = phones only (screens up to 767px wide); tablets/desktop go straight to the loading
+    // screen and never download the card's images
+    mobileOnly: true,
+    hintText: "Tap to open",
+    // Height of the ribbon's centre line on the card art (from the top) — the bow and ribbon
+    // are placed on it, so adjust this if new card art puts the ribbon higher or lower
+    ribbonY: "47.5%",
+    images: {
+      // Front of the card, split down the middle into the two doors (portrait, ~9:16)
+      card: "/loadingImages/kart.webp",
+      // Bow with its tails on a transparent background (826×1157 — knot at 50% across, 19.5% down)
+      bow: "/loadingImages/kurdele-fiyonk.webp",
+      // The two halves of the ribbon band, transparent background (left half / right half)
+      ribbonLeft: "/loadingImages/kurdele-sol.webp",
+      ribbonRight: "/loadingImages/kurdele-sag.webp",
+      // Close-up of the knot laid over the bow's own knot, so the knot can loosen on its own
+      // (square, knot centred; "" to hide)
+      knot: "/loadingImages/muhur.webp",
+      // Paper texture: inside of the doors + background around the card on wide screens (tiles)
+      paper: "/loadingImages/kilif.webp",
+      // Gold light map, same size/framing as `card` — red = gold areas, green = order the light
+      // reaches them (bright = first), blue = sparkle points ("" = simple shimmer instead)
+      goldMap: "/loadingImages/altin.webp",
+    },
+  },
   // Opening "Save the Date" loading screen (components/loader/LoadingScreen.tsx).
   // Couple names, wedding date and ceremony details come from couple / wedding / ceremony above.
   loadingScreen: {
     // "photos" = sliding photo background + photo date cards
     // "plain"  = no images at all: soft solid background + plain date cards
     display: DISPLAY_MODE,
-    // Loading screen only — overrides `display` for the loader ("photos" = photo strip + photo date cards)
-    loaderDisplay: "photos" as "photos" | "plain",
+    // Loading screen only — overrides `display` for the loader:
+    //   "photos" = photo strip + photo date cards
+    //   "plain"  = invitation card wording over a soft background
+    //   "poster" = couple cut-out in the middle, "Save the Date" on top, details below (see `poster`)
+    loaderDisplay: "poster" as "photos" | "plain" | "poster",
+    // Poster layout (loaderDisplay: "poster") — names, date, time and venue come from
+    // couple / wedding / ceremony; corners from `cornerDecos` below; headline from `headline`
+    poster: {
+      // Couple photo with a transparent background, shown in the middle (PNG/WebP; "" to hide)
+      coupleImage: "/Details/couple.png",
+      kicker: "Together with their families", // small line above "Save the Date" ("" to hide)
+      // Short lines either side of the couple, one entry per line ([] to hide a side)
+      sideLeft: ["Two hearts", "One love", "Forever"],
+      sideRight: ["Come", "witness", "our first", "chapter"],
+      weddingOf: "The wedding of", // line above the couple's names ("" to hide)
+      showVenue: true, // ceremony venue name + address under the date and time
+      showProgress: true, // progress bar under the status line
+      showPercent: true, // "0% … 100%" under the progress bar
+      // How much the background photos are washed out (0 = full photos, 1 = hidden)
+      photoVeil: 0.35,
+      // Colors — shared with the envelope screen that follows, so the look carries over
+      theme: {
+        goldDark: "#6f4c1f", // gold lettering: shadow side
+        gold: "#a67c3d", // gold lettering: main tone
+        goldLight: "#d2b06e", // gold lettering: sheen
+        ink: "#5a4020", // small capital lines (kicker, date line, venue, status)
+        inkSoft: "#6b5230", // venue address
+        washTop: "#cee4f4", // color washed over the top of the photos (sky blue)
+        washBottom: "#f6dee6", // color washed over the bottom of the photos (blush)
+      },
+      // Optional image for the envelope paper that follows the poster (portrait image; its middle
+      // band is used, lined up across the flap, front and pocket), e.g. "/loadingImages/kart.webp".
+      // "" = the soft pink linen paper (loader-poster.css → "Linen envelope paper")
+      envelopeTexture: "",
+    },
+    // How much the background photos are washed out on the "plain" loader (0 = full photos)
+    plainPhotoVeil: 0.3,
     // Colors used when display is "plain"
     plainTheme: {
       background: "var(--color-welcome-bg)",
@@ -505,6 +571,8 @@ export const siteConfig = {
     backgroundPhotosDesktop: MARQUEE_PHOTOS_DESKTOP, // same marquee on screens 768px and up
     // Opening title on the loader and the envelope letter — short joining words ("of", "the") are set in script
     headline: "Save the Date", // "the" is set in the Brittany script (loader + envelope letter)
+    // Word between the couple's names on the loader and the envelope letter ("and", "&", "y", …)
+    namesJoiner: "and",
     // {days} is replaced with the number of days left before wedding.date
     countdownText: "{days} more days to go",
     countdownOneDayText: "1 more day to go",

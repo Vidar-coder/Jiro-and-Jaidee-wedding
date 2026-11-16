@@ -38,6 +38,20 @@ function marqueeElapsedSeconds() {
 // (no second fade-in from blank during the loader → envelope cross-fade)
 const loadedPhotos = new Set<string>();
 
+/**
+ * Marks a strip photo as ready (`data-loaded` → CSS fade-in). Set on the DOM after mount, never
+ * rendered as a prop: `loadedPhotos` only fills up in the browser, so rendering it would make the
+ * client HTML differ from the server's and break hydration. Also catches photos that finished
+ * loading before React hydrated — their onLoad already fired and would never run again.
+ */
+function markLoadedIfReady(img: HTMLImageElement | null, src: string) {
+  if (!img) return;
+  if (loadedPhotos.has(src) || (img.complete && img.naturalWidth > 0)) {
+    loadedPhotos.add(src);
+    img.setAttribute('data-loaded', '');
+  }
+}
+
 const useIsomorphicLayoutEffect = typeof window === 'undefined' ? useEffect : useLayoutEffect;
 
 function pickRandomPhotos(photos: readonly string[], count: number) {
@@ -81,7 +95,7 @@ function MarqueeRow({
               return (
                 <div key={`${copy}-${src}`} className="loading-screen__slide-photo">
                   <Image
-                    data-loaded={loadedPhotos.has(src) ? '' : undefined}
+                    ref={(img) => markLoadedIfReady(img, src)}
                     src={src}
                     alt=""
                     fill
