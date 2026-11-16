@@ -25,6 +25,9 @@ const eventImageUrl = OG_IMAGE_FALLBACK
 const imageType = (path: string) =>
   /\.png$/i.test(path) ? "image/png" : /\.webp$/i.test(path) ? "image/webp" : "image/jpeg"
 
+// Phones open on the tap-to-open card (content/site.ts → openingCard), so the loader comes later
+const phoneOpeningCard = siteConfig.openingCard?.enabled !== false
+
 const coupleNames = `${siteConfig.couple.groomNickname} & ${siteConfig.couple.brideNickname}`
 const eventTitle = `${coupleNames} - Wedding Invitation`
 const eventDescription = `Celebrate the wedding of ${siteConfig.couple.groomNickname} and ${siteConfig.couple.brideNickname} on ${siteConfig.wedding.date} at ${siteConfig.ceremony.venue}. RSVP, explore their story, and find everything you need to join the celebration.`
@@ -212,7 +215,9 @@ export default function RootLayout({
           type="font/ttf"
           crossOrigin="anonymous"
         />
-        {/* First loader photos, preloaded as the exact resized files the marquee requests */}
+        {/* First loader photos, preloaded as the exact resized files the marquee requests.
+            On phones with the opening card the loader only starts after the tap, so its photos
+            go at low priority there and don't hold up the card art. */}
         {[
           ...LOADING_BG_PHOTOS.slice(0, 3).map((src) => ({ src, media: "(max-width: 767px)" })),
           ...LOADING_BG_PHOTOS_DESKTOP.slice(0, 3).map((src) => ({ src, media: "(min-width: 768px)" })),
@@ -232,7 +237,11 @@ export default function RootLayout({
               imageSrcSet={props.srcSet}
               imageSizes={props.sizes}
               media={media}
-              {...(index % 3 === 0 ? { fetchPriority: "high" as const } : {})}
+              {...(media.includes("max-width") && phoneOpeningCard
+                ? { fetchPriority: "low" as const }
+                : index % 3 === 0
+                  ? { fetchPriority: "high" as const }
+                  : {})}
             />
           )
         })}

@@ -157,10 +157,24 @@ export const GoldGlint: React.FC<GoldGlintProps> = ({ src, active, durationMs, m
     img.onerror = () => {
       if (!cancelled) unavailableRef.current();
     };
-    img.src = src;
+    // Only needed after the tap: fetch it once the page has finished loading (and the browser is
+    // idle) so it never competes with the card art for bandwidth on first load
+    let idle = 0;
+    const startLoad = () => {
+      if (cancelled) return;
+      if ('requestIdleCallback' in window) {
+        idle = window.requestIdleCallback(() => { if (!cancelled) img.src = src; }, { timeout: 2000 });
+      } else {
+        img.src = src;
+      }
+    };
+    if (document.readyState === 'complete') startLoad();
+    else window.addEventListener('load', startLoad, { once: true });
 
     return () => {
       cancelled = true;
+      window.removeEventListener('load', startLoad);
+      if (idle) window.cancelIdleCallback(idle);
       stateRef.current = null;
       gl.getExtension('WEBGL_lose_context')?.loseContext();
     };

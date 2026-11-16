@@ -17,6 +17,9 @@ import { PlainBubbles } from "@/components/loader/PlainBubbles"
 import { SectionBackdrop } from "@/components/section-backdrop"
 import type { SponsorsList } from "@/components/sections/entourage"
 
+// Wait this long after the loader starts before mounting the invitation sections behind it
+const MAIN_MOUNT_DELAY_MS = 400
+
 const Silk = dynamic(() => import("@/components/silk"), { ssr: false })
 const GuestList = dynamic(() => import("@/components/sections/guest-list").then(mod => ({ default: mod.GuestList })), { ssr: false })
 
@@ -153,6 +156,33 @@ export function InvitationPage({ sponsorsList, showEntourage = true }: Invitatio
     // eslint-disable-next-line react-hooks/exhaustive-deps -- decided once, on first load
   }, [])
 
+  // The invitation sections (<main>) are hidden behind the opening card / loader at first, so
+  // they aren't server-rendered: they used to be ~95% of the first HTML, and a phone had to lay
+  // all of it out before it could paint the card (≈5s on a mid-range phone). They mount in the
+  // browser shortly after the loader starts — behind it, with the whole loader to get ready —
+  // or right away when coming back from /gallery.
+  const [mainMounted, setMainMounted] = useState(false)
+  useEffect(() => {
+    if (mainMounted) return
+    if (appState !== AppState.LOADING) {
+      setMainMounted(true)
+      return
+    }
+    if (!loaderStarted) return
+    let idle = 0
+    const timer = window.setTimeout(() => {
+      if ("requestIdleCallback" in window) {
+        idle = window.requestIdleCallback(() => setMainMounted(true), { timeout: 1500 })
+      } else {
+        setMainMounted(true)
+      }
+    }, MAIN_MOUNT_DELAY_MS)
+    return () => {
+      window.clearTimeout(timer)
+      if (idle) window.cancelIdleCallback(idle)
+    }
+  }, [appState, loaderStarted, mainMounted])
+
   const handleOpeningCardOpenStart = useCallback(() => setLoaderStarted(true), [])
   const handleOpeningCardOpened = useCallback(() => setOpeningCardVisible(false), [])
 
@@ -213,6 +243,7 @@ export function InvitationPage({ sponsorsList, showEntourage = true }: Invitatio
 
         {/* The sections below are lazy chunks; their own boundary lets the opening card / loader
             hydrate (and respond to taps) without waiting for every chunk to arrive */}
+        {mainMounted && (
         <Suspense fallback={null}>
         <main className="relative w-full h-full">
 
@@ -325,6 +356,7 @@ export function InvitationPage({ sponsorsList, showEntourage = true }: Invitatio
           </motion.div>
         </main>
         </Suspense>
+        )}
 
       </div>
   )

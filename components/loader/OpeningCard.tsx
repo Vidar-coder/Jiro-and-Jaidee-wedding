@@ -76,8 +76,14 @@ export const OpeningCard: React.FC<OpeningCardProps> = ({ onOpenStart, onOpened,
 
   // Start fetching the artwork with the HTML so the card is never painted blank
   // (phones only when mobileOnly — desktop never shows the card, so never downloads it)
+  // (the card art and bow first — they are what the guest sees)
   for (const path of [IMG.card, IMG.bow, IMG.ribbonLeft, IMG.ribbonRight, IMG.knot]) {
-    if (path) preload(path, { as: 'image', ...(mobileOnly && { media: OPENING_CARD_MOBILE_MEDIA }) });
+    if (!path) continue;
+    preload(path, {
+      as: 'image',
+      ...((path === IMG.card || path === IMG.bow) && { fetchPriority: 'high' as const }),
+      ...(mobileOnly && { media: OPENING_CARD_MOBILE_MEDIA }),
+    });
   }
 
   const reduceMotion = useReducedMotion();

@@ -501,9 +501,11 @@ export const siteConfig = {
     ribbonY: "47.5%",
     images: {
       // Front of the card, split down the middle into the two doors (portrait, ~9:16)
-      card: "/loadingImages/kart.webp",
+      // (the -opt files are phone-sized re-encodes of kart.webp / kurdele-fiyonk.webp — ~60% smaller
+      // so the card shows sooner; the originals are kept alongside)
+      card: "/loadingImages/kart-opt.webp",
       // Bow with its tails on a transparent background (826×1157 — knot at 50% across, 19.5% down)
-      bow: "/loadingImages/kurdele-fiyonk.webp",
+      bow: "/loadingImages/kurdele-fiyonk-opt.webp",
       // The two halves of the ribbon band, transparent background (left half / right half)
       ribbonLeft: "/loadingImages/kurdele-sol.webp",
       ribbonRight: "/loadingImages/kurdele-sag.webp",
