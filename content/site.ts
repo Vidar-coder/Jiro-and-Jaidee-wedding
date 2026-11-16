@@ -348,12 +348,12 @@ guests: {
 
 // ── Website address (used for QR codes, link previews, table finder) ────────
 // NEXT_PUBLIC_SITE_URL (env) overrides this when set.
-const SITE_URL = "https://geronimo-and-jaidee-ashley.vercel.app/"
+const SITE_URL = "https://geronimo-and-jaidee-ashledy.vercel.app/"
 // Image shown when the link is shared (Facebook, Messenger, Viber, WhatsApp, X, …).
 // Keep it a 1200×630 JPG under ~300 KB — Messenger/WhatsApp silently drop larger images,
 // which is why forwarded links can lose their preview. Exported from /Details/imagepreview.png.
 // Use a NEW filename whenever the image changes — Facebook caches images by URL.
-const LINK_PREVIEW_IMAGE = "/monogram/linkPreview.pngg"
+const LINK_PREVIEW_IMAGE = "/monogram/linkPreview.png"
 // Square fallback (600×600) for apps that show a small square thumbnail
 const LINK_PREVIEW_IMAGE_SQUARE = "/monogram/linkPreview.png"
 

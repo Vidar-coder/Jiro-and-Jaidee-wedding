@@ -2,7 +2,6 @@
 
 import { useEffect, useMemo, useState } from "react"
 import Link from "next/link"
-import { Playfair_Display } from "next/font/google"
 import { cinzel } from "@/lib/fonts"
 import {
   Copy,
@@ -34,8 +33,8 @@ import {
   ProposalMixedTextBlock,
   proposalMixedTextInter,
 } from "@/lib/proposal-mixed-text"
+import { playfair } from "@/lib/self-hosted-fonts"
 
-const playfair = Playfair_Display({ subsets: ["latin"], weight: ["500", "600"] })
 
 const PLAYFUL_ROLE_IDS = new Set(["flower-girl", "ring-bearer", "coin-bearer", "bible-bearer", "herald-bearer"])
 

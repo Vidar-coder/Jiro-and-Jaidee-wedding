@@ -13,13 +13,12 @@ import {
   Globe,
   X,
 } from "lucide-react"
-import { Playfair_Display } from "next/font/google"
 import { cinzel } from "@/lib/fonts"
 import { cn } from "@/lib/utils"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { normalizeWeddingDateString } from "@/lib/wedding-date"
+import { playfair } from "@/lib/self-hosted-fonts"
 
-const playfair = Playfair_Display({ subsets: ["latin"], weight: ["500", "600"], style: ["normal", "italic"] })
 
 const DAY_MS = 24 * 60 * 60 * 1000
 

@@ -4,19 +4,14 @@ import { useEffect, useState, type ReactNode } from "react"
 import Link from "next/link"
 import { Download, ExternalLink } from "lucide-react"
 import { QRCodeCanvas } from "qrcode.react"
-import { Playfair_Display } from "next/font/google"
 import { cinzel } from "@/lib/fonts"
 import localFont from "next/font/local"
 import { useSiteConfig } from "@/hooks/use-site-config"
 import { useQrColors } from "@/hooks/use-css-color"
 import { getTableFinderUrl, TABLE_FINDER_PATH } from "@/lib/table-finder"
+import { playfairItalic as playfair } from "@/lib/self-hosted-fonts"
 
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["400", "500"],
-  style: ["italic"],
-})
 
 const theSeasons = localFont({
   src: "../Font/Fontspring-DEMO-theseasons-reg.otf",

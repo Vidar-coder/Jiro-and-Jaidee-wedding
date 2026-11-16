@@ -17,7 +17,6 @@ import Link from "next/link"
 import { motion, AnimatePresence, useReducedMotion, type Variants } from "motion/react"
 import { Heart, Check, X, Sparkles } from "lucide-react"
 import localFont from "next/font/local"
-import { Playfair_Display } from "next/font/google"
 import { cinzel } from "@/lib/fonts"
 import { ProposalMixedText, proposalMixedTextInter } from "@/lib/proposal-mixed-text"
 import { useSiteConfig } from "@/hooks/use-site-config"
@@ -32,6 +31,7 @@ import { parseInviteeNameFromSearchParams } from "@/lib/proposal-invite-link"
 import { TintedDeco } from "@/components/tinted-deco"
 import { SectionBackdrop } from "@/components/section-backdrop"
 import { HEART_PATH } from "@/components/rising-hearts"
+import { playfair } from "@/lib/self-hosted-fonts"
 
 const proposalEntryEase = [0.22, 1, 0.36, 1] as const
 const CINEMATIC_ENTRY_MS = 3000
@@ -52,11 +52,6 @@ const headerItem: Variants = {
 }
 
 
-const playfair = Playfair_Display({
-  subsets: ["latin"],
-  weight: ["500", "600", "700"],
-  style: ["normal", "italic"],
-})
 
 const inter = proposalMixedTextInter
 

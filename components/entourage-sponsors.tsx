@@ -1,7 +1,6 @@
 "use client"
 
 import { useEffect, useMemo, useRef, useState, type ReactNode } from "react"
-import { Playfair_Display } from "next/font/google"
 import { cinzel } from "@/lib/fonts"
 import { useBodyScrollLock } from "@/hooks/use-body-scroll-lock"
 import { Button } from "@/components/ui/button"
@@ -23,8 +22,8 @@ import {
   UserCheck,
   X,
 } from "lucide-react"
+import { playfair } from "@/lib/self-hosted-fonts"
 
-const playfair = Playfair_Display({ subsets: ["latin"], weight: ["500", "600"] })
 
 interface Entourage {
   Name: string

@@ -1,5 +1,5 @@
 import localFont from "next/font/local"
-import { Cinzel } from "next/font/google"
+export { cinzel } from "./self-hosted-fonts"
 
 /**
  * Couple-name script from public/fonts/AnastasiaScript.ttf
@@ -22,8 +22,3 @@ export const anastasiaScript = localFont({
  * same font, which shows up as a hydration mismatch. Import this one instead:
  *   import { cinzel } from "@/lib/fonts"
  */
-export const cinzel = Cinzel({
-  subsets: ["latin"],
-  weight: ["400", "500", "600", "700"],
-  display: "swap",
-})
