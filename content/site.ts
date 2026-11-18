@@ -78,7 +78,7 @@ const WEDDING_DATE = "February 27, 2027" // e.g. "June 5, 2027"
 const WEDDING_DAY = "Saturday" // 
 const TIMES = {
   entourageCall: "2:00 PM", // entourage assembly
-  guestArrival: "2:30 PM", // guests arrival / assembly (shown in Event Details + reminders)
+  guestArrival: "2:00 PM", // guests arrival / assembly (shown in Event Details + reminders)
   ceremony: "3:00 PM",
   reception: "5:00 PM", // start of program
 }
@@ -144,7 +144,7 @@ const RSVP = {
   coordinator: "{groom} / {bride}", // {groom} / {bride} → couple nicknames
   phone: "to be announced",
 }
-const HASHTAGS = ["#JiroAndJaidee"] // official wedding hashtag (Snap & Share, reminders)
+const HASHTAGS = ["#JIROnlyOneforJaidee"," #MadeJashforJiro"] // official wedding hashtag (Snap & Share, reminders)
 
 // ── Attire guide (Event Details → Attire Guidelines) ────────────────────────
 // SHOW = which cards to display AND their order, top to bottom. Examples:
@@ -205,7 +205,6 @@ entourage: {
       "Elegant floor-length gowns in soft rose gold and " +
       "dusty rose, featuring flowing chiffon, satin, or " +
       "tulle fabrics. The Maid of Honor will stand out in " +
-      "a sophisticated deep burgundy gown. Flower girls " +
       "may wear matching blush rose dresses with delicate " +
       "floral accents.",
     highlight: "Rose Gold, Dusty Rose & Burgundy Gowns",
@@ -367,9 +366,9 @@ const DISPLAY_MODE = "plain" as "photos" | "plain"
 
 // ── Shared images ───────────────────────────────────────────────────────────
 const BRAND = {
-  monogram: "/monogram/Elegant Black Calligraphic J Monogram.png", // monogram (loader, envelope, closing)
+  monogram: "/monogram/monogram.png", // monogram (loader, envelope, closing)
   coupleNameImage: "/Details/newcoupelNames.png", // couple-name lettering (loader, envelope)
-  seal: "/monogram/newSeal.png", // envelope wax seal
+  seal: "/monogram/seal.png", // envelope wax seal
   backgroundMusic: "/background_music/Palagi - Tj Monterde Violin Cover by BOJO.mp3",
 }
 
@@ -382,15 +381,15 @@ const COUPLE_PHOTOS = Array.from(
 
 // Portraits for the envelope reveal + the main cover photo (soft natural light, no heavy filters)
 const COUPLE_PORTRAITS = {
-  groom: "/mobile-background/couple (7).webp", // left photo in the envelope
-  bride: "/mobile-background/couple (12).webp", // right photo in the envelope
+  groom: "/mobile-background/couple (24).webp", // left photo in the envelope
+  bride: "/mobile-background/couple (9).webp", // right photo in the envelope
   cover: "/mobile-background/couple (1).webp", // photo pulled out of the envelope + home hero cover photo
 }
 
 // Sliding photo marquee behind the loader and envelope.
 // Phones use the portrait shots in /public/mobile-background, desktop the landscape
 // shots in /public/desktop-background — update the counts when files are added/removed.
-const MARQUEE_PHOTO_COUNT = 26
+const MARQUEE_PHOTO_COUNT = 24
 const MARQUEE_PHOTOS = Array.from(
   { length: MARQUEE_PHOTO_COUNT },
   (_, i) => `/mobile-background/couple (${i + 1}).webp`,
@@ -534,7 +533,7 @@ export const siteConfig = {
     // couple / wedding / ceremony; corners from `cornerDecos` below; headline from `headline`
     poster: {
       // Couple photo with a transparent background, shown in the middle (PNG/WebP; "" to hide)
-      coupleImage: "/Details/couple.png",
+      coupleImage: "/Details/Wedding Couple Transparent Cutout.png",
       kicker: "Together with their families", // small line above "Save the Date" ("" to hide)
       // Short lines either side of the couple, one entry per line ([] to hide a side)
       sideLeft: ["Two hearts", "One love", "Forever"],
@@ -659,7 +658,7 @@ export const siteConfig = {
     subtitle: "ten years of choosing each other",
     // Short opening line under the title ("" hides it)
     intro:
-      "From a high school crush to a “yes” at the crater of Mount Pinatubo, this is the story of how Yvan and Roan found their way to forever.",
+      "From college classmates to almost like siblings, thesis and OJT buddies, and now soon-to-be husband and wife. Through ten years of friendship, laughter, and countless memories, our journey led to one unforgettable question and a “YES” at the summit of Mt. 387 in Nueva Ecija. And now, we're choosing each other for a lifetime. ❤",
     // Small sprig above the title ("" hides it)
     headerOrnament: DECOR.headerOrnament,
     // Shown above a chapter's title when it has no date, e.g. "Chapter 03"
@@ -693,7 +692,7 @@ chapters: [
   {
     date: "Where It All Began",
     title: "The Beginning of Our Story",
-    image: "/mobile-background/couple (17).webp",
+    image: "/mobile-background/couple (14).webp",
     imageAlt: "{groom} and {bride} together",
     imagePosition: "center 25%",
     paragraphs: [
@@ -703,7 +702,7 @@ chapters: [
   {
     date: "The First Chapter",
     title: "Getting to Know Each Other",
-    image: "/mobile-background/couple (9).webp",
+    image: "/mobile-background/couple (6).webp",
     imageAlt: "{groom} and {bride} smiling together",
     imagePosition: "center 35%",
     paragraphs: [
@@ -713,7 +712,7 @@ chapters: [
   {
     date: "Little Moments",
     title: "The Beauty of Simple Things",
-    image: "/mobile-background/couple (25).webp",
+    image: "/mobile-background/couple (22).webp",
     imageAlt: "{groom} and {bride} together",
     imagePosition: "center 20%",
     paragraphs: [
@@ -723,7 +722,7 @@ chapters: [
   {
     date: "Growing Closer",
     title: "A Connection Worth Cherishing",
-    image: "/mobile-background/couple (21).webp",
+    image: "/mobile-background/couple (18).webp",
     imageAlt: "{groom} and {bride} together",
     imagePosition: "center 25%",
     paragraphs: [
@@ -733,7 +732,7 @@ chapters: [
   {
     date: "Something Special",
     title: "When Friendship Turned Into Love",
-    image: "/mobile-background/couple (14).webp",
+    image: "/mobile-background/couple (11).webp",
     imageAlt: "{groom} and {bride} laughing together",
     imagePosition: "center 25%",
     paragraphs: [
@@ -743,7 +742,7 @@ chapters: [
   {
     date: "Falling Into Place",
     title: "A Love That Felt Like Home",
-    image: "/mobile-background/couple (18).webp",
+    image: "/mobile-background/couple (15).webp",
     imageAlt: "{groom} and {bride} together",
     imagePosition: "center 25%",
     paragraphs: [
@@ -753,7 +752,7 @@ chapters: [
   {
     date: "The Day We Said Yes",
     title: "The Beginning of Something Beautiful",
-    image: "/mobile-background/couple (25).webp",
+    image: "/mobile-background/couple (7).webp",
     imageAlt: "{groom} and {bride} together",
     imagePosition: "center 25%",
     paragraphs: [
@@ -989,9 +988,9 @@ chapters: [
         icon: "rings" as TimelineIconName,
       },
       {
-        show: false,
-        time: "3:00 PM",
-        title: "First Touch & Prayer",
+        show: true,
+        time: "1:00 PM",
+        title: "Coffee Cart & Snacks",
         description: "The couple settles, prays and rests (optional, no first look).",
         location: "{ceremony}",
         image: "/weddingTimeline/WeddingCeremony.png",
@@ -1027,7 +1026,7 @@ chapters: [
       },
       {
         show: true,
-        time: "3:30 PM",
+        time: "3:00 PM",
         title: "Wedding Ceremony",
         description: "We exchange our vows before God, family and friends.",
         location: "{ceremony}",
