@@ -696,7 +696,7 @@ chapters: [
     imageAlt: "{groom} and {bride} together",
     imagePosition: "center 25%",
     paragraphs: [
-      "Every love story has a beginning, and theirs started with a simple moment that would eventually mean everything. When {groom} and {bride} first crossed paths, neither could have imagined the beautiful journey that awaited them. What seemed like an ordinary encounter would one day become the start of something extraordinary.",
+      "It all started in college, when we became classmates and OJT partners, treating each other like siblings at first. Little did we know that the friendship we shared would slowly turn into something more beautiful. As the days passed, we found ourselves falling in love while helping each other through our duties, responsibilities, and everyday challenges. Before our OJT journey came to an end, she asked me one magical question that changed everything. And our answer was YES. Yes, we love each other. Yes, we choose each other. And yes, we are ready to spend a lifetime together.",
     ],
   },
   {
@@ -756,7 +756,10 @@ chapters: [
     imageAlt: "{groom} and {bride} together",
     imagePosition: "center 25%",
     paragraphs: [
-      "And then came the moment that marked a new chapter in their journey. {groom} and {bride} chose to turn their growing love into a beautiful commitment to one another. From that day forward, they continued building memories, celebrating milestones, overcoming challenges, and discovering new reasons to fall in love with each other every day.",
+      "Our story began ten years ago, but one of its most unforgettable chapters happened at the summit of Mt. 387, our second mountain hike together. ",+
+      "Jiro surprised Jaidee with the magical question just a month after they officially became a couple. With no witnesses to that private moment, they kept their little secret close to their hearts."+
+      "Fresh out of college at the time, they chose to wait for the perfect moment to share their story. And now, after all these years, the moment has finally come to celebrate the beginning of forever. " +
+      "Because sometimes, even just a month is enough to know where your heart wants to go. "
     ],
   },
 ] as StoryChapter[],
