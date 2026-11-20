@@ -183,7 +183,6 @@ const ATTIRE = {
  
 entourage: {
   title: "Entourage",
-  image: "/Details/entourage.png",
   dressCode: "Formal Attire",
 
   palette: [
@@ -200,28 +199,17 @@ entourage: {
     "accents for a timeless, sophisticated celebration.",
 
   ladies: {
-    label: "Bridesmaids & Flower Girls",
+    label: "",
     details:
-      "The Maid of Honor will stand out  wearing fuchsia pink " +
-      "Elegant floor-length gowns in soft rose gold and " +
-      "dusty rose, featuring flowing chiffon, satin, or " +
-      "tulle fabrics. The Maid of Honor will stand out in " +
-      "may wear matching blush rose dresses with delicate " +
-      "floral accents.",
-    highlight: "Rose Gold, Dusty Rose & Burgundy Gowns",
+      "",
+    highlight: "",
     roles: [] as { role: string; attire: string }[],
   },
 
   gentlemen: {
-    label: "Groomsmen & Bearers",
+    label: "",
     details:
-      "Classic light stone gray formal suits paired with " +
-      "crisp black shirts, coordinating gray neckties, " +
-      "and polished black formal shoes. The Best Man " +
-      "will wear a distinguished charcoal gray suit " +
-      "with a deep burgundy tie. Bearers may wear " +
-      "matching light gray suits.",
-    highlight: "Stone Gray Suits & Burgundy Accents",
+      "",
     roles: [] as { role: string; attire: string }[],
   },
 },
@@ -261,7 +249,7 @@ entourage: {
 
 sponsors: {
   title: "Principal Sponsors",
-  image: "/Details/sponsor.png",
+ // image: "/Details/sponsor.png",
   dressCode: "Formal Attire",
 
   palette: [
@@ -279,24 +267,14 @@ sponsors: {
   ladies: {
     label: "Ninang",
     details:
-      "Elegant floor-length coral pink gowns in " +
-      "flowing chiffon, satin, or tulle. Delicate " +
-      "floral embellishments, soft draping, and " +
-      "tasteful beadwork are welcome. Any elegant " +
-      "neckline or sleeve style may be worn.",
-    highlight: "Coral Pink Formal Gowns",
+      "",
     roles: [] as { role: string; attire: string }[],
   },
 
   gentlemen: {
     label: "Ninong",
     details:
-      "Classic black formal suits paired with " +
-      "crisp white long-sleeved dress shirts, " +
-      "black neckties, and polished black " +
-      "leather shoes. A white pocket square " +
-      "may be added for an elegant finishing touch.",
-    highlight: "Classic Black Suits with Black Ties",
+      " ",
     roles: [] as { role: string; attire: string }[],
   },
 },
@@ -307,7 +285,7 @@ sponsors: {
 
 guests: {
   title: "Wedding Guests",
-  image: "/Details/guest.png",
+  //image: "/Details/guest.png",
   dressCode: "Semi-Formal or Formal Attire",
   palette: DRESS_CODE_PALETTE,
 
@@ -821,7 +799,7 @@ chapters: [
     // Cards, colors, images and which groups show → QUICK SETUP → ATTIRE
     attire: {
       title: "Attire Guidelines",
-      description: "Our day is dressed in soft blues and warm peach. We'd love for you to wear them with us. Please find your role below.",
+      description: "",
       // Shown above a card's palette
       paletteTitle: "Dress Code Palette",
       paletteSubtitle: "", // script line under the palette title — "" hides it
