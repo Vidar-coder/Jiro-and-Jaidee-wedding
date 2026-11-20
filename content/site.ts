@@ -79,7 +79,7 @@ const WEDDING_DAY = "Saturday" //
 const TIMES = {
   entourageCall: "2:00 PM", // entourage assembly
   guestArrival: "2:00 PM", // guests arrival / assembly (shown in Event Details + reminders)
-  ceremony: "3:00 PM",
+  ceremony: "2:00 PM",
   reception: "5:00 PM", // start of program
 }
 
@@ -92,8 +92,8 @@ const CEREMONY_VENUE = {
   photos: ["/Details/update-recep (1).jpg", "/Details/update-recep (2).jpg", "/Details/update-recep (3).jpg", "/Details/update-recep (4).jpg"],
 }
 const RECEPTION_VENUE = {
-  name: " Sheperds Palace, Dalayap, Candaba, Pampanga",
-  address: "brgy Candaba, Pampanga, Philippines",
+  name: "Casa Terrazola",
+  address: "Casa Terrazola, Paligawan Road, Brgy. Bucal, Silang, Cavite",
   map: "https://maps.app.goo.gl/buRWssEcVn2vuJxf7",
   photos: ["/Details/reception (4).jpg", "/Details/reception (5).jpg", "/Details/reception (6).jpg"],
 }
@@ -202,6 +202,7 @@ entourage: {
   ladies: {
     label: "Bridesmaids & Flower Girls",
     details:
+      "The Maid of Honor will stand out  wearing fuchsia pink " +
       "Elegant floor-length gowns in soft rose gold and " +
       "dusty rose, featuring flowing chiffon, satin, or " +
       "tulle fabrics. The Maid of Honor will stand out in " +
@@ -215,7 +216,7 @@ entourage: {
     label: "Groomsmen & Bearers",
     details:
       "Classic light stone gray formal suits paired with " +
-      "crisp white shirts, coordinating gray neckties, " +
+      "crisp black shirts, coordinating gray neckties, " +
       "and polished black formal shoes. The Best Man " +
       "will wear a distinguished charcoal gray suit " +
       "with a deep burgundy tie. Bearers may wear " +
@@ -317,27 +318,18 @@ guests: {
     "for a timeless and beautifully coordinated celebration.",
 
   ladies: {
-    label: "Ladies",
+    label: "",
     details:
-      "Elegant midi, ankle-length, or floor-length dresses " +
-      "in deep burgundy, silver gray, or champagne beige. " +
-      "Flowing chiffon, satin, and soft textured fabrics " +
-      "are encouraged. Delicate floral patterns, " +
-      "sophisticated draping, and tasteful embellishments " +
-      "are welcome.",
+      "",
+
     highlight: "Burgundy, Silver Gray & Champagne Beige Dresses",
     roles: [] as { role: string; attire: string }[],
   },
 
   gentlemen: {
-    label: "Gentlemen",
+    label: "",
     details:
-      "Smart semi-formal or formal attire featuring " +
-      "collared shirts, tailored trousers, or blazers " +
-      "in classic black, champagne beige, silver gray, " +
-      "or deep burgundy. Suits are welcome but optional. " +
-      "Complete the look with polished leather dress shoes.",
-    highlight: "Classic Black, Burgundy & Neutral Formal Attire",
+      "",
     roles: [] as { role: string; attire: string }[],
   },
 },
@@ -756,10 +748,7 @@ chapters: [
     imageAlt: "{groom} and {bride} together",
     imagePosition: "center 25%",
     paragraphs: [
-      "Our story began ten years ago, but one of its most unforgettable chapters happened at the summit of Mt. 387, our second mountain hike together. ",+
-      "Jiro surprised Jaidee with the magical question just a month after they officially became a couple. With no witnesses to that private moment, they kept their little secret close to their hearts."+
-      "Fresh out of college at the time, they chose to wait for the perfect moment to share their story. And now, after all these years, the moment has finally come to celebrate the beginning of forever. " +
-      "Because sometimes, even just a month is enough to know where your heart wants to go. "
+      "Our story began ten years ago, but one of its most unforgettable chapters unfolded at the summit of Mt. 387, on our second mountain hike together. Just a month after officially becoming a couple, Jiro surprised Jaidee with a magical question that would forever change their story. With no witnesses to that intimate moment, they chose to keep their little secret tucked safely in their hearts. Fresh out of college at the time, they decided to wait for the right moment to share their story with the world. And now, after all these years, that moment has finally arrived, as they celebrate the beautiful beginning of forever. Because sometimes, it only takes a month for the heart to know where it truly belongs."
     ],
   },
 ] as StoryChapter[],
@@ -862,7 +851,7 @@ chapters: [
           variant: "soft" as "accent" | "soft",
           showPalette: false,
           paragraphs: [
-            "Please arrive by {guestsTime} so you can find your seat and settle in before the ceremony begins at {ceremonyTime}. Thank you for being on time.",
+            "Please arrive by {guestsTime} so you can find your seat and settle in. Thank you for being on time.",
           ],
         },
         {
@@ -2005,7 +1994,7 @@ Now, as they prepare to say yes before God and the people they love most, Cather
       ],
     },
     website: {
-      show: true,
+      show: false,
       title: "Share Our Wedding Website",
       description:
         "Spread the word about {couple}'s celebration. Share this QR code so friends and family can join us.",
@@ -2021,7 +2010,7 @@ Now, as they prepare to say yes before God and the people they love most, Cather
       allCopied: "All Copied!",
     },
     social: {
-      show: true,
+      show: false,
       title: "Share on Social Media",
       description: "Help spread the word about {couple}'s wedding across your favorite platforms.",
       // Remove any you don't want: "instagram" | "facebook" | "tiktok" | "twitter"
