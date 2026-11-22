@@ -286,7 +286,7 @@ sponsors: {
 guests: {
   title: "Wedding Guests",
   //image: "/Details/guest.png",
-  dressCode: "Semi-Formal or Formal Attire",
+  dressCode: "Formal Attire",
   palette: DRESS_CODE_PALETTE,
 
   note:
@@ -962,7 +962,7 @@ chapters: [
         time: "1:00 PM",
         title: "Coffee Cart & Snacks",
         description: "The couple settles, prays and rests (optional, no first look).",
-        location: "{ceremony}",
+        //location: "{ceremony}",
         image: "/weddingTimeline/WeddingCeremony.png",
         icon: "rings" as TimelineIconName,
       },
@@ -972,7 +972,7 @@ chapters: [
         time: TIMES.guestArrival,
         title: "Guest Arrival",
         description: "Our coordinators will welcome you and help you find your seat.",
-        location: "{ceremony}",
+        //location: "{ceremony}",
         image: "/weddingTimeline/Elegant Wedding Guests Arrive Sign.png",
         icon: "guests" as TimelineIconName,
       },
@@ -999,7 +999,7 @@ chapters: [
         time: "3:00 PM",
         title: "Wedding Ceremony",
         description: "We exchange our vows before God, family and friends.",
-        location: "{ceremony}",
+        //location: "{ceremony}",
         image: "/weddingTimeline/WeddingCeremony.png",
         icon: "rings" as TimelineIconName,
       },
@@ -1008,16 +1008,16 @@ chapters: [
         time: "4:30 PM",
         title: "Pictorials & Recessional",
         description: "Join us for photos with the newlyweds.",
-        location: "{ceremony}",
+        //location: "{ceremony}",
         image: "/weddingTimeline/PhotoSession.png",
         icon: "rings" as TimelineIconName,
       },
       {
         show: true,
         time: "5:00 PM",
-        title: "Grazing Table, Photo Booth & Coffee Cart",
-        description: "Enjoy the grazing table, photo booth, coffee cart and tattoo station.",
-        location: "{reception}",
+        title: "Grazing Table & Photo Booth",
+        description: "Enjoy the grazing table, photo booth.",
+        //location: "{reception}",
         image: "/weddingTimeline/CockTailHour.png",
         icon: "cocktail" as TimelineIconName,
       },
@@ -1478,7 +1478,7 @@ chapters: [
     // {couple} → "Groom & Bride" nicknames. "" hides a line or image.
     qrCard: {
       coupleNameImage: BRAND.coupleNameImage, // unused: the card sets the names in type like the loader
-      coupleImage: "/Details/couple-image.png", // couple illustration beside the text
+      coupleImage: "/Details/awdwa.png", // couple illustration beside the text
       eyebrow: "The wedding of",
       title: "Find Your Table",
       script: "please be seated",
@@ -1501,7 +1501,7 @@ chapters: [
   proposal: {
     decos: { ...CORNER_DECOS },
     coupleNameImage: BRAND.coupleNameImage, // unused: names are set in type like the loader
-    coupleImage: "/Details/couple-image.png", // couple illustration above the question
+    coupleImage: "/Details/awdwa.png", // couple illustration above the question
     ornament: DECOR.headerOrnament, // small sprig at the top of the card; "" to hide
     // Eucalyptus sprigs on either side of the couple name; "" to hide one
     nameDecos: { left: DECOR.sideLeft, right: DECOR.sideRight },
