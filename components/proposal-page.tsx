@@ -497,9 +497,9 @@ function ProposalDirectAsk({
         <DirectTitle as="h1" eyebrow={labels.headerEyebrow} title={fill(labels.headline ?? "")} />
       </motion.div>
 
-      {/* Wedding party illustration (site.ts → proposal.coupleImage) — shown as is, no frame */}
+      {/* Couple photo with a soft foreground haze along the lower edge. */}
       {coupleImage ? (
-        <motion.div variants={headerItem} className="relative -mx-2 mt-4 sm:mx-0 sm:mt-6">
+        <motion.div variants={headerItem} className="proposal-couple-photo relative -mx-2 mt-4 sm:mx-0 sm:mt-6">
           <Image
             src={encodeURI(coupleImage)}
             alt="Our wedding party"
