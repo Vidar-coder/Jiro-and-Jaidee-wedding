@@ -1238,32 +1238,6 @@ img[src*="%2Flovestorydeco%2F"] {
    Corner decorations pinned to the screen corners, behind the card.
    Color: --color-deco (TintedDeco). Size: --invite-corner-size.
    -------------------------------------------------------------------------- */
-/* Match the invitation paper as the photo fades into a soft foreground haze. */
-.proposal-couple-photo {
-  isolation: isolate;
-}
-
-.proposal-couple-photo::after {
-  content: "";
-  position: absolute;
-  z-index: 1;
-  inset: auto -4% -1%;
-  height: 30%;
-  pointer-events: none;
-  background: linear-gradient(
-    to top,
-    var(--invite-paper),
-    color-mix(in srgb, var(--invite-paper) 95%, transparent) 25%,
-    color-mix(in srgb, var(--invite-paper) 35%, transparent) 55%,
-    transparent
-  );
-  -webkit-backdrop-filter: blur(7px);
-  backdrop-filter: blur(7px);
-  filter: blur(12px);
-  -webkit-mask-image: linear-gradient(to bottom, transparent, #000 55%);
-  mask-image: linear-gradient(to bottom, transparent, #000 55%);
-}
-
 .invite-corners {
   position: fixed;
   inset: 0;

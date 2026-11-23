@@ -12,6 +12,13 @@ import {
 const ENTOURAGE_SCRIPT_URL = siteConfig.googleAPI.entourage
 const SPONSORS_SCRIPT_URL = siteConfig.googleAPI.sponsors
 
+// /inviteone and /invitetwo read sponsors under their own cache keys (inviteone shares this sheet)
+function invalidateSponsorCaches() {
+  invalidateSheetsCache(SHEETS_CACHE_KEYS.sponsors)
+  invalidateSheetsCache(`${SHEETS_CACHE_KEYS.sponsors}:one`)
+  invalidateSheetsCache(`${SHEETS_CACHE_KEYS.sponsors}:two`)
+}
+
 function text(value: unknown) {
   return typeof value === "string" ? value.trim() : ""
 }
@@ -106,7 +113,7 @@ async function saveConfirmedResponse(payload: ProposalSubmitPayload) {
       MalePrincipalSponsor: payload.name.trim(),
       FemalePrincipalSponsor: "",
     })
-    invalidateSheetsCache(SHEETS_CACHE_KEYS.sponsors)
+    invalidateSponsorCaches()
     return
   }
 
@@ -114,7 +121,7 @@ async function saveConfirmedResponse(payload: ProposalSubmitPayload) {
     MalePrincipalSponsor: "",
     FemalePrincipalSponsor: payload.name.trim(),
   })
-  invalidateSheetsCache(SHEETS_CACHE_KEYS.sponsors)
+  invalidateSponsorCaches()
 }
 
 export async function GET() {

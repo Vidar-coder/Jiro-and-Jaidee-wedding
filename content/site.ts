@@ -1501,7 +1501,7 @@ chapters: [
   proposal: {
     decos: { ...CORNER_DECOS },
     coupleNameImage: BRAND.coupleNameImage, // unused: names are set in type like the loader
-    coupleImage: "/Details/awdwa.png", // couple illustration above the question
+    coupleImage: "/Details/coupleproposal.png", // couple portrait above the question (arched frame)
     ornament: DECOR.headerOrnament, // small sprig at the top of the card; "" to hide
     // Eucalyptus sprigs on either side of the couple name; "" to hide one
     nameDecos: { left: DECOR.sideLeft, right: DECOR.sideRight },

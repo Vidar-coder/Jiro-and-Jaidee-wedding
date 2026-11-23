@@ -416,6 +416,75 @@ function HeartMark({ className = "h-3 w-3" }: { className?: string }) {
   )
 }
 
+/**
+ * The couple's portrait in an arched "chapel window" frame that echoes the card's dome:
+ * a white mat, a hairline outer frame, a soft vignette and a heart clasp at the base.
+ * Cropped to 4:5 and focused on the faces so the photo stays compact on phones.
+ */
+function CouplePortrait({ src, alt }: { src: string; alt: string }) {
+  const reduceMotion = useReducedMotion()
+  const revealed = useContext(RevealContext)
+  return (
+    <figure className="relative mx-auto w-[74%] max-w-[16.5rem] min-[400px]:w-[70%] sm:max-w-[19rem]">
+      {/* Soft glow behind the frame */}
+      <div
+        className="pointer-events-none absolute -inset-5 rounded-t-full rounded-b-[2.5rem] opacity-80 blur-2xl"
+        style={ambientGlowStyle}
+        aria-hidden
+      />
+      {/* Outer hairline frame */}
+      <div
+        className="relative rounded-t-full rounded-b-[1.75rem] border p-[5px] sm:p-[7px]"
+        style={{
+          borderColor: "color-mix(in srgb, var(--color-motif-medium) 65%, transparent)",
+          background: "rgb(255 255 255 / 70%)",
+          boxShadow: "0 22px 44px -24px var(--invite-shadow)",
+        }}
+      >
+        {/* Photo window */}
+        <div
+          className="relative aspect-[4/5] overflow-hidden rounded-t-full rounded-b-[1.4rem] border"
+          style={{ borderColor: GOLD_BORDER_SOFT }}
+        >
+          <motion.div
+            className="absolute inset-0"
+            initial={reduceMotion ? false : { scale: 1.08 }}
+            animate={revealed ? { scale: 1 } : undefined}
+            transition={{ duration: 6, ease: "easeOut", delay: 0.4 }}
+          >
+            <Image
+              src={encodeURI(src)}
+              alt={alt}
+              fill
+              sizes="(max-width: 640px) 70vw, 304px"
+              className="select-none object-cover object-[50%_38%]"
+              draggable={false}
+              priority
+            />
+          </motion.div>
+          {/* Gentle vignette so the photo sits softly inside the paper card */}
+          <div
+            className="pointer-events-none absolute inset-0"
+            style={{
+              background:
+                "radial-gradient(120% 90% at 50% 40%, transparent 60%, color-mix(in srgb, var(--invite-ink) 18%, transparent) 100%)",
+            }}
+            aria-hidden
+          />
+        </div>
+      </div>
+      {/* Heart clasp at the base */}
+      <span
+        className="absolute bottom-0 left-1/2 flex -translate-x-1/2 translate-y-1/2 rounded-full border bg-white p-1.5"
+        style={{ borderColor: GOLD_BORDER_SOFT }}
+        aria-hidden
+      >
+        <HeartMark className="h-3.5 w-3.5" />
+      </span>
+    </figure>
+  )
+}
+
 /** Big Seasons capitals under a small-caps eyebrow ("A Personal Invitation" / "From Our Hearts to Yours"). */
 function DirectTitle({ eyebrow, title, as = "h2" }: { eyebrow: string; title: string; as?: "h1" | "h2" }) {
   const Tag = as
@@ -497,23 +566,13 @@ function ProposalDirectAsk({
         <DirectTitle as="h1" eyebrow={labels.headerEyebrow} title={fill(labels.headline ?? "")} />
       </motion.div>
 
-      {/* Couple photo with a soft foreground haze along the lower edge. */}
       {coupleImage ? (
-        <motion.div variants={headerItem} className="proposal-couple-photo relative -mx-2 mt-4 sm:mx-0 sm:mt-6">
-          <Image
-            src={encodeURI(coupleImage)}
-            alt="Our wedding party"
-            width={1536}
-            height={1024}
-            sizes="(max-width: 640px) 92vw, 512px"
-            className="block h-auto w-full select-none"
-            draggable={false}
-            priority
-          />
+        <motion.div variants={headerItem} className="mt-5 sm:mt-7">
+          <CouplePortrait src={coupleImage} alt={`${groom} and ${bride}`} />
         </motion.div>
       ) : null}
 
-      <motion.div variants={headerItem} className="mt-6 sm:mt-7">
+      <motion.div variants={headerItem} className="mt-7 sm:mt-8">
         <DirectTitle eyebrow={labels.placeEyebrow ?? ""} title={fill(labels.placeTitle ?? "")} />
         {detailsLine ? (
           <SmallCaps className="mt-2 text-[0.58rem] tracking-[0.22em] sm:text-[0.64rem]" color={palette.bodySoft}>

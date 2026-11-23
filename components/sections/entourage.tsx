@@ -567,6 +567,7 @@ const ROLE_CATEGORY_ORDER = [
   "Ring Bearer",
   "Coin Bearer",
   "Bible Bearer",
+  "Herald Bearer",
   "Flower Ladies",
   "Escorts",
   "Petal Maidens",
